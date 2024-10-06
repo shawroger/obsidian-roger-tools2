@@ -1,0 +1,10 @@
+{
+	"id": "roger-tools2",
+	"name": "Roger Tools 2",
+	"version": "0.0.1",
+	"minAppVersion": "1.1.0",
+	"description": "a simple obsidian tools for roger self",
+	"author": "shawroger",
+	"authorUrl": "https://github.com/shawroger",
+	"isDesktopOnly": false
+}
