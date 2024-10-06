@@ -34,7 +34,6 @@ export default class RogerTool2Plugin extends Plugin {
 
 	async saveSettings() {
 		this.saveData(this.settings).then(() => {
-			console.log(this.settings)
 			injectSettings(window.$rx, this.settings);
 		});
 	}

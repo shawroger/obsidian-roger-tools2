@@ -1,6 +1,6 @@
 
 export function assets(filename: string) {
-	return (window.$rx?.settings["OBS_RESOURCE"]) + filename;
+	return window.$rx?.settings["OBS_RESOURCE"] + filename;
 }
 
 export const QQ_LOGOS: Record<string, string> = {
