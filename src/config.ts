@@ -1,8 +1,7 @@
-export function assets(filename: string) {
-	return "file:///D:/_jane/S0/_assets/obsidianResource/" + filename;
-}
 
-export const NotePadPath = "C:\\Program Files\\Notepad++\\notepad++.exe";
+export function assets(filename: string) {
+	return (window.$rx?.settings["OBS_RESOURCE"]) + filename;
+}
 
 export const QQ_LOGOS: Record<string, string> = {
 	me: assets("wechat-logo-me1.png"),

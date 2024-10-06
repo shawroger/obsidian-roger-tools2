@@ -4,7 +4,7 @@ import { getCounterStr } from "src/utils/macrostr";
 
 
 
-function renderMacro(text: string, code?: HTMLElement) {
+function renderMacro(app: App, text: string, code?: HTMLElement) {
 	const newEl: HTMLElement = document.createElement("span");
 	const spanEl: HTMLElement = document.createElement("span");
 	const $: any = { ...window.$rx };
@@ -95,7 +95,7 @@ export class MacroComponent extends MarkdownRenderChild {
 	) {
 		super(el);
 
-		const newEl = renderMacro(this.markdownSource);
+		const newEl = renderMacro(this.app, this.markdownSource);
 
 		const div = el.createDiv();
 		div.appendChild(newEl);
@@ -134,7 +134,7 @@ export function MacroPostProcessor(app: App): MarkdownPostProcessor {
 
 			if (text !== undefined) {
 				if (text.startsWith("<%") && text.endsWith("%>")) {
-					renderMacro(text.slice(2, -2).trim(), code);
+					renderMacro(app, text.slice(2, -2).trim(), code);
 				} else if (text.startsWith("?=")) {
 					renderSiphan(text.slice(2), code);
 				}

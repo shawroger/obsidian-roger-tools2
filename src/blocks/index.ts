@@ -18,5 +18,4 @@ export const EnabledBlocks = [
 	DynamicCSSComponent,
 	DynamicIframeComponent,
     MacroComponent,
-    SiphanComponent
 ];

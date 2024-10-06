@@ -1,13 +1,5 @@
 import { App, MarkdownRenderChild, parseYaml } from "obsidian";
-import { assets } from "src/config";
-import {
-	findFilename,
-	replaceAbsFilepath,
-	replaceall,
-	replaceHTMLLinks,
-	resolveFileIcon,
-	resolveWebImage,
-} from "src/utils";
+import { replaceAbsFilepath, replaceall, replaceHTMLLinks } from "src/utils";
 
 function parseLineKey(lines: string[], key: string, defaultValue: string) {
 	return (
@@ -16,6 +8,97 @@ function parseLineKey(lines: string[], key: string, defaultValue: string) {
 			?.slice(key.length)
 			.trimStart() || defaultValue
 	);
+}
+
+type ConfigKeys =
+	| "width"
+	| "height"
+	| "debug"
+	| "useVue"
+	| "useAxios"
+	| "useSwiper"
+	| "useAppBody"
+	| "useElementUI";
+
+interface ConfigMapItem {
+	name: ConfigKeys;
+	default: string;
+	type: "string" | "number";
+}
+
+type ConfigMap = Array<ConfigMapItem>;
+
+const configMap: ConfigMap = [
+	{
+		name: "width",
+		default: "100%",
+		type: "string",
+	},
+	{
+		name: "height",
+		default: "400px",
+		type: "string",
+	},
+	{
+		name: "debug",
+		default: "0",
+		type: "number",
+	},
+	{
+		name: "useVue",
+		default: "1",
+		type: "number",
+	},
+	{
+		name: "useAxios",
+		default: "1",
+		type: "number",
+	},
+	{
+		name: "useSwiper",
+		default: "0",
+		type: "number",
+	},
+	{
+		name: "useAppBody",
+		default: "1",
+		type: "number",
+	},
+	{
+		name: "useElementUI",
+		default: "0",
+		type: "number",
+	},
+];
+
+type ConfigValueMap = {
+    [K in ConfigKeys]: string | number;
+}
+
+function genConfigMap(lines: string[], configMap: ConfigMap) {
+	const map: ConfigValueMap = {} as any;
+	configMap.forEach((e) => {
+		let value: string | number = parseLineKey(
+			lines,
+			e.name + ":",
+			e.default
+		);
+		if (e.type === "number") {
+			value = Number(value);
+		}
+		map[e.name] = value;
+	});
+
+	return map;
+}
+
+function compareConf(conf: ConfigValueMap, key: ConfigKeys, comparedValue = 0): boolean {
+	const value = conf[key];
+
+	if(typeof comparedValue === "number") {
+		return Number(value) > comparedValue;
+	}
+	return value === comparedValue;
 }
 
 export class DynamicIframeComponent extends MarkdownRenderChild {
@@ -34,14 +117,8 @@ export class DynamicIframeComponent extends MarkdownRenderChild {
 		const lines = replaceAbsFilepath(markdownSource.split("\n"));
 
 		this.iframe = document.createElement("iframe");
+		const conf = genConfigMap(lines, configMap);
 
-		const width = parseLineKey(lines, "width:", "100%");
-		const height = parseLineKey(lines, "height:", "400px");
-		const debug = Number(parseLineKey(lines, "debug:", "0"));
-		const useVue = Number(parseLineKey(lines, "useVue:", "1"));
-		const useAxios = Number(parseLineKey(lines, "useAxios:", "1"));
-		const useAppBody = Number(parseLineKey(lines, "useAppBody:", "1"));
-		const useSwiper = Number(parseLineKey(lines, "useSwiper:", "1"));
 		this.iframe.frameBorder = parseLineKey(lines, "border:", "none");
 
 		let $injectValue = "";
@@ -80,7 +157,7 @@ export class DynamicIframeComponent extends MarkdownRenderChild {
 				.join("\n");
 		}
 
-		if (useAppBody > 0) {
+		if (compareConf(conf, "useAppBody")) {
 			body = replaceHTMLLinks(body, false);
 			body = `<div id="app">${body}</div>`;
 		}
@@ -155,9 +232,14 @@ export class DynamicIframeComponent extends MarkdownRenderChild {
 		const html = `<!DOCTYPE html><html>
 <head>
 ${
-	useVue > 0
-		? `<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/theme-chalk/index.css">
-<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/3.4.2/css/swiper.min.css">`
+	compareConf(conf, "useSwiper")
+		? `<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/3.4.2/css/swiper.min.css">`
+		: ""
+}
+
+${
+	compareConf(conf, "useElementUI")
+		? `<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/theme-chalk/index.css">`
 		: ""
 }
 	${cssUrl}
@@ -241,19 +323,22 @@ ${head}
 ${body}
 	</body>
 	${
-		useAxios > 0
+
+		compareConf(conf, "useAxios")
 			? '<script src="https://cdn.bootcdn.net/ajax/libs/axios/1.5.0/axios.min.js"></script>'
 			: ""
 	}
 	${
-		useVue > 0
+		compareConf(conf, "useVue")
 			? `<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
 	<script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.13/index.min.js"></script>`
 			: ""
 	}
 
 	${
-		useSwiper > 0
+		
+		compareConf(conf, "useSwiper")
+
 			? '<script src="https://cdn.bootcdn.net/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>'
 			: ""
 	}
@@ -278,7 +363,7 @@ ${vue}
 		/*window.addEventListener("message", (event) => {
 			window.$ = event.data;
 		}, false);*/
-		if (debug) {
+		if (compareConf(conf, "debug")) {
 			console.log(style);
 			console.log(body);
 			console.log(script);
@@ -286,8 +371,8 @@ ${vue}
 		}
 		const blob = new Blob([html], { type: "text/html" });
 
-		this.iframe.style.width = width;
-		this.iframe.style.height = height;
+		this.iframe.style.width = conf["width"].toString();
+		this.iframe.style.height = conf["height"].toString();;
 		this.iframe.src = window.URL.createObjectURL(blob);
 
 		// this.iframe.onload = () => {

@@ -1,5 +1,43 @@
-import { assets, FEISHU_LOGOS, FILE_CARD_ICON, QQ_LOGOS, WEB_ICONS, WEB_IMAGES, WECHAT_LOGOS } from "../config";
+import {
+	assets,
+	FEISHU_LOGOS,
+	FILE_CARD_ICON,
+	QQ_LOGOS,
+	WEB_ICONS,
+	WEB_IMAGES,
+	WECHAT_LOGOS,
+} from "../config";
 
+export function safePath(value: string) {
+	if (value && !value.startsWith("file:///")) return "file:///" + value;
+	return value;
+}
+
+export function assetsOld(filename: string) {
+	return window.$rx?.settings["OBS_OLD_RESOURCE2"] + filename;
+}
+
+export function replaceHTMLLinks(content: string, autoNewLine = false) {
+	let res = replaceall(
+		window.$rx?.settings["OBS_RESOURCE"],
+
+		"assets://",
+		content
+	);
+
+	res = replaceall("file:///", window.$rx.base(), res);
+
+	if (autoNewLine) {
+		let lines = res.split("\n");
+
+		res = lines
+			.filter((e) => e.length > 0)
+			.map((line) => (isPureText(line) ? "<p>" + line + "</p>" : line))
+			.join("\n");
+	}
+
+	return res;
+}
 
 export function replaceAbsFilepath(lines: string): string;
 export function replaceAbsFilepath(lines: string[]): string[];
@@ -185,34 +223,8 @@ export function resolveWebImage(
 	return "";
 }
 
-export function assetsOld(filename: string) {
-	return "file:///D:/_jane/S2024/_assets/S002/" + filename;
-}
-
 export const isPureText = (line: string) =>
 	!line.includes("</") && !line.includes("/>");
-
-export function replaceHTMLLinks(content: string, autoNewLine = false) {
-	let res = replaceall(
-		"file:///D:/_jane/S0/_assets/obsidianResource/",
-
-		"assets://",
-		content
-	);
-
-	res = replaceall("file:///", window.$rx.base(), res);
-
-	if (autoNewLine) {
-		let lines = res.split("\n");
-
-		res = lines
-			.filter((e) => e.length > 0)
-			.map((line) => (isPureText(line) ? "<p>" + line + "</p>" : line))
-			.join("\n");
-	}
-
-	return res;
-}
 
 export function resolveLogo(
 	name: string,

@@ -1,12 +1,12 @@
 import { App } from "obsidian";
-import { assets } from "./config";
+import { assets } from "../config";
 import {
 	genStyle,
 	loadRemoteCss,
 	loadRemoteJs,
 	localBaseJoin,
 	parseResourcePath,
-} from "./utils";
+} from "../utils";
 
 declare global {
 	interface Window {
@@ -16,6 +16,9 @@ declare global {
 		d: (strings: string[] | string) => string;
 		e: (strings: string[] | string) => string;
 		k: (strings?: string) => void;
+		D: (strings: string[] | string) => string;
+		E: (strings: string[] | string) => string;
+		K: (strings?: string) => void;
 		$rx: {
 			author: string;
 			time: (showSeconds: boolean) => string;
@@ -34,6 +37,7 @@ declare global {
 			laptop1(filename: string): string;
 			genStyle: (style: Record<string, string | undefined>) => string;
 			_counter: Record<string, number>;
+			settings: Record<string, string>;
 		};
 		Vue: any;
 		ELEMENT: any;
@@ -42,18 +46,16 @@ declare global {
 }
 
 
-export function injectRX(RX: any) {
-	if (!RX) {
-		RX = {};
-	}
-	RX.app = this.app;
+export function injectRX(RX: any, app: App) {
+	
+	RX.app = app;
 	RX._counter = {};
 	RX.author = "Roger";
 	RX.laptop1 = assets;
 	RX.genStyle = genStyle;
 	RX.loadRemoteJs = loadRemoteJs;
 	RX.loadRemoteCss = loadRemoteCss;
-	const BASE = parseResourcePath(this.app.vault.adapter.getResourcePath(""));
+	const BASE = parseResourcePath(RX.app.vault.adapter.getResourcePath(""));
 
 	RX.base = function (filepath: string) {
 		if (!filepath) return BASE;
@@ -97,5 +99,6 @@ export function injectRX(RX: any) {
 	RX.notice = (s: string) => new (window as any).Notice(s);
 
 	RX.copyText = window.navigator.clipboard.writeText;
-	RX.file = (path: string) => this.app.vault.getAbstractFileByPath(path);
+	RX.file = (path: string) => RX.app.vault.getAbstractFileByPath(path);
+	RX.settings = {};
 }
