@@ -1869,6 +1869,16 @@ div.markdown-preview-sizer.markdown-preview-section {
   }*/
 /*****  文件图标.css **/
 /* 如果链接的文件类型是 exe，使用不同的 background-image */
+
+.markdown-preview-view a.external-link::before {
+	content: "";
+	padding-left: 1em;
+	margin-right: 5px;
+	background-position: center;
+	background-size: 1.1em 1.1em;
+	background-repeat: no-repeat;
+}
+
 .markdown-preview-view a.external-link[href$=".exe"]::before,
 .markdown-preview-view a.external-link[href$=".exe/"]::before {
 	content: "";
