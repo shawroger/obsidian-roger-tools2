@@ -96,6 +96,8 @@ export class CardComponent extends MarkdownRenderChild {
 
 		imageStyle += `"`;
 
+		iconLink = window.$rx.base(iconLink);
+
 		let imageContainerHTML = imageLink
 			? `<div class="rx-card-link-image-container"${containerStyle}>
 			<div

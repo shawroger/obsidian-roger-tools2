@@ -11,6 +11,9 @@ importers:
       obsidian-plugin-generator:
         specifier: ^1.0.5
         version: 1.0.5
+      obsidian-roger-tools2:
+        specifier: 'file:'
+        version: 'file:'
     devDependencies:
       '@codemirror/view':
         specifier: ^6.34.1
@@ -754,6 +757,9 @@ packages:
   obsidian-plugin-generator@1.0.5:
     resolution: {integrity: sha512-A3wQjinG4/bI2x6ST22b2uNCfsTTNPlPXcX4BDeWewfIary6MBBlVsvkj80+cnTPzV3tIpHC22XJDxcFJakMOg==}
     hasBin: true
+
+  'obsidian-roger-tools2@file:':
+    resolution: {directory: '', type: directory}
 
   obsidian@1.7.2:
     resolution: {integrity: sha512-k9hN9brdknJC+afKr5FQzDRuEFGDKbDjfCazJwpgibwCAoZNYHYV8p/s3mM8I6AsnKrPKNXf8xGuMZ4enWelZQ==}
@@ -1741,6 +1747,10 @@ snapshots:
       commander: 9.5.0
       inquirer: 9.3.7
       zx: 7.2.3
+
+  'obsidian-roger-tools2@file:':
+    dependencies:
+      obsidian-plugin-generator: 1.0.5
 
   obsidian@1.7.2(@codemirror/state@6.4.1)(@codemirror/view@6.34.1):
     dependencies:
