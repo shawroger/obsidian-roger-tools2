@@ -1,3 +1,7 @@
+.markdown-preview-view {
+    padding: 32px !important;
+}
+
 /*****  badge.css **/
 span.inline-badge {
 	padding: 2.5px;
