@@ -1876,7 +1876,7 @@ div.markdown-preview-sizer.markdown-preview-section {
 
 .markdown-preview-view a.external-link::before {
 	content: "";
-	padding-left: 1em;
+	padding-left: 0em;
 	margin-right: 5px;
 	background-position: center;
 	background-size: 1.1em 1.1em;
