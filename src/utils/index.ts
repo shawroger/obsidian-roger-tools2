@@ -175,7 +175,8 @@ export function resolveFileIcon(file: string, filetype?: string) {
 			return FILE_CARD_ICON()[name];
 		}
 	}
-	return assets(`fileIcon${filetype}.png`);
+
+	return assets(`fileIcon_default.png`);
 }
 
 export function findFilename(file: string) {
