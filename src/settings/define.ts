@@ -21,7 +21,7 @@ export const SettingPanel: {
 	{
 		key: "OBS_RESOURCE",
 		name: "聊天头像图片路径",
-		desc: "聊天记录中头像图片的保存路径路径",
+		desc: "聊天记录中头像图片的保存路径路径（本地路径需要加上 file:/// 前缀）",
 		mapFunc: safePath,
 	},
 	{

@@ -2,6 +2,106 @@
     padding: 32px !important;
 }
 
+/** metainfo **/
+
+.rx-meta-info-inline-render::before {
+	content: "🏷️";
+    top: -1.1px;
+	position: relative;
+}
+
+.rx-meta-info-inline-render {
+	display: inline-block; /* 让 span 表现得像块级元素 */
+	padding: 2px 5px; /* 内边距 */
+	color: #fff; /* 文字颜色 */
+	background-color: rgb(246, 117, 3); /* 背景颜色 */
+	border: none; /* 去掉边框 */
+	border-radius: 5px; /* 圆角 */
+	text-align: center; /* 文字居中 */
+	text-decoration: none; /* 去掉下划线 */
+	cursor: pointer; /* 鼠标悬停时显示手型 */
+	transition: background-color 0.3s ease; /* 背景颜色过渡效果 */
+}
+
+/* 点击效果 */
+.rx-meta-info-inline-render:hover {
+	background-color: #da4804; /* 点击时背景颜色 */
+}
+
+/* 点击效果 */
+.rx-meta-info-inline-render:active {
+	background-color: #da4804; /* 点击时背景颜色 */
+}
+
+.rx-meta-info-inline-render .rx-meta-info-title {
+	font-weight: bold;
+}
+
+.rx-meta-info-inline-render .rx-meta-info-title::after {
+	content: "🏷️";
+    top: -1.1px;
+	position: relative;
+}
+
+.rx-meta-info-inline-render .rx-meta-info-content {
+	padding-left: 0.25em;
+}
+
+.rx-meta-info-inline-render .rx-meta-info-content .rx-meta-info-group span:last-of-type::before {
+	content: "(";
+}
+
+
+.rx-meta-info-inline-render .rx-meta-info-content .rx-meta-info-group span:last-of-type::after {
+	content: ")";
+}
+
+.rx-meta-info-inline-render .rx-meta-info-content .rx-meta-info-group:not(:last-of-type) span:last-of-type::after {
+	content: ")、";
+}
+
+
+/** supertag **/
+.rx-supertag-inline-render::before {
+	content: "🗂️";
+    top: -1.1px;
+	position: relative;
+}
+
+.rx-supertag-inline-render {
+	display: inline-block; /* 让 span 表现得像块级元素 */
+	padding: 2px 5px; /* 内边距 */
+	color: #fff; /* 文字颜色 */
+	background-color: #007bff; /* 背景颜色 */
+	border: none; /* 去掉边框 */
+	border-radius: 5px; /* 圆角 */
+	text-align: center; /* 文字居中 */
+	text-decoration: none; /* 去掉下划线 */
+	cursor: pointer; /* 鼠标悬停时显示手型 */
+	transition: background-color 0.3s ease; /* 背景颜色过渡效果 */
+}
+
+/* 鼠标悬停效果 */
+.rx-supertag-inline-render:hover {
+	background-color: #0056b3; /* 悬停时背景颜色 */
+}
+
+/* 点击效果 */
+.rx-supertag-inline-render:active {
+	background-color: #004080; /* 点击时背景颜色 */
+}
+
+/* 禁用状态 */
+.rx-supertag-inline-render:disabled {
+	background-color: #cccccc; /* 禁用时背景颜色 */
+	cursor: not-allowed; /* 禁用时鼠标样式 */
+}
+
+.rx-supertag-inline-render a {
+	color: #fff;
+	text-decoration: none;
+}
+
 /*****  badge.css **/
 span.inline-badge {
 	padding: 2.5px;

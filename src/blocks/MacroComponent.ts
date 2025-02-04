@@ -1,7 +1,7 @@
 import { App, MarkdownPostProcessor, MarkdownRenderChild } from "obsidian";
 import { replaceall, replaceHTMLLinks } from "src/utils";
 import { getCounterStr } from "src/utils/macrostr";
-
+import { jsonHelper } from "./MetaInfoComponent";
 
 
 function renderMacro(app: App, text: string, code?: HTMLElement) {
@@ -87,7 +87,7 @@ function renderMacro(app: App, text: string, code?: HTMLElement) {
 
 export class MacroComponent extends MarkdownRenderChild {
 	private readonly abortController = new AbortController();
-	static language = "rx-macro"
+	static language = "rx-macro";
 	constructor(
 		private readonly el: HTMLElement,
 		private readonly markdownSource: string,
@@ -126,7 +126,6 @@ function renderSiphan(text: string, code?: HTMLElement) {
 	return newEl;
 }
 
-
 export function MacroPostProcessor(app: App): MarkdownPostProcessor {
 	return (el) => {
 		el.findAll("code").forEach((code) => {
@@ -137,8 +136,66 @@ export function MacroPostProcessor(app: App): MarkdownPostProcessor {
 					renderMacro(app, text.slice(2, -2).trim(), code);
 				} else if (text.startsWith("?=")) {
 					renderSiphan(text.slice(2), code);
+				} else if (text.startsWith("(") && text.endsWith(")") && text.length === 8 && /^[A-Z0-9]+$/.test(text.slice(1, -1))) {
+					renderSuperTag(text.slice(1, -1), code);
+				}else if (text.length > 4 && text.startsWith("@") && text.includes(":") && text.includes("=") && text.includes("{") && text.includes("}") ) {
+					renderMetaInfo(text, code);
 				}
 			}
 		});
 	};
 }
+
+function renderSuperTag(text: string, code?: HTMLElement) {
+	const newEl: HTMLElement = document.createElement("span");
+	const link: HTMLLinkElement = document.createElement("a") as any;
+
+	link.textContent = text;
+	link.href = "es://" + text;
+	link.setAttribute("target", "_blank"); 
+	link.setAttribute("aria-label", "在 everything 中检索 " + text); 
+	
+	newEl.appendChild(link);
+	newEl.addClass("rx-supertag-inline-render");
+	if (code) {
+		code.replaceWith(newEl);
+	}
+	return newEl;
+}
+
+
+
+
+
+function renderMetaInfo(text: string, code?: HTMLElement) {
+	const newEl: HTMLElement = document.createElement("span");
+	const titleEl: HTMLElement = document.createElement("span");
+	const contentEl: HTMLElement = document.createElement("span");
+
+	const prefix = text.split("=")[0].slice(1);
+	const jsonContent = (jsonHelper(text.split("=")[1]));
+	const json = JSON.parse(jsonContent);
+	titleEl.addClass("rx-meta-info-title");
+	contentEl.addClass("rx-meta-info-content");
+
+	for(const key of Object.keys(json)) {
+		const groupEl: HTMLElement = document.createElement("span");
+		const keyEl: HTMLElement = document.createElement("span");
+		const valEl: HTMLElement = document.createElement("span");
+		keyEl.innerText = key;
+		valEl.innerText = json[key as any];
+		groupEl.appendChild(keyEl);
+		groupEl.appendChild(valEl);
+		groupEl.addClass("rx-meta-info-group");
+		contentEl.appendChild(groupEl);
+	}
+	titleEl.innerText = prefix;
+	newEl.appendChild(titleEl);
+	newEl.appendChild(contentEl);
+	newEl.addClass("rx-meta-info-inline-render");
+	if (code) {
+		code.replaceWith(newEl);
+	}
+	return newEl;
+}
+

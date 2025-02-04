@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Data Row Example</title>
+<style>
+.data-row {
+  display: flex;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.data-title {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.data-name {
+  color: #007bff;
+  margin-right: 20px;
+}
+
+.data-age {
+  color: #6c757d;
+}
+
+.data-row span:not(:last-child)::after {
+  content: "|";
+  margin-left: 10px;
+  color: #ccc;
+}
+</style>
+</head>
+<body>
+
+<div class="data-row">
+  <span class="data-title">Title:</span>
+  <span class="data-name">John Doe</span>
+  <span class="data-age">30</span>
+</div>
+
+</body>
+</html>
