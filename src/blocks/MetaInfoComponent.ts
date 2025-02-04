@@ -35,6 +35,14 @@ function findJson(line: string, key: string) {
 	return line.slice(0, end + 1);
 }
 
+function lineHelper(line: string) {
+	if (line.startsWith("- ")) {
+		line = line.slice(2);
+	}
+
+	return line;
+}
+
 export class MetaInfoComponent extends MarkdownRenderChild {
 	static language = "rx-meta";
 	private readonly abortController = new AbortController();
@@ -67,7 +75,7 @@ export class MetaInfoComponent extends MarkdownRenderChild {
 				.filter((line) => line.includes("`@" + key + "="))
 				.map((e) => [
 					mdLink(file, ""),
-					e,
+					lineHelper(e),
 					jsonHelper(findJson(e, key)),
 				]);
 

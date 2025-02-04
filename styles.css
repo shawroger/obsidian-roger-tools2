@@ -11,6 +11,7 @@
 }
 
 .rx-meta-info-inline-render {
+	margin: 0px 3px;
 	display: inline-block; /* 让 span 表现得像块级元素 */
 	padding: 2px 5px; /* 内边距 */
 	color: #fff; /* 文字颜色 */
