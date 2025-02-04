@@ -18,11 +18,12 @@ function mdLink(file: any, title: string, isRemovedExt = true) {
 }
 
 export function jsonHelper(text: string) {
-	let json = replaceall("{", '{"', text);
-	json = replaceall(": ", '": "', json);
-	json = replaceall(":", '":"', json);
-	json = replaceall("}", '"}', json);
-	json = replaceall(", ", '", "', json);
+	let json = text;
+	// json = replaceall("{", '{"', json);
+	// json = replaceall(": ", '": "', json);
+	// json = replaceall(":", '":"', json);
+	// json = replaceall("}", '"}', json);
+	// json = replaceall(", ", '", "', json);
 	return json;
 }
 
