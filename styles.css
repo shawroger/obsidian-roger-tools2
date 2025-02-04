@@ -45,6 +45,7 @@
 
 .rx-meta-info-inline-render .rx-meta-info-content {
 	padding-left: 0.25em;
+	display: none;
 }
 
 .rx-meta-info-inline-render .rx-meta-info-content .rx-meta-info-group span:last-of-type::before {
