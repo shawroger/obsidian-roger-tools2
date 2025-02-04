@@ -2,6 +2,7 @@ import { App, Plugin } from "obsidian";
 
 import * as path from "path";
 import * as child_process from "child_process";
+import { loadRemoteJs } from "src/utils";
 
 export function addCommands(plugin: Plugin) {
 	const vaultDir = (plugin.app.vault.adapter as any).basePath;
@@ -14,6 +15,14 @@ export function addCommands(plugin: Plugin) {
 				plugin.app.workspace.getActiveFile()!.path
 			);
 			navigator.clipboard.writeText(activeFile);
+		},
+	});
+
+	plugin.addCommand({
+		id: "render-twitter-block",
+		name: "Render twitter block",
+		callback: () => {
+			loadRemoteJs("https://platform.twitter.com/widgets.js");
 		},
 	});
 
