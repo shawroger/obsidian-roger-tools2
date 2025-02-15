@@ -3,7 +3,6 @@ const path = require("path");
 
 const files = ["styles.css", "main.js"];
 const LOCAL_PLUGIN_DIRS = [
-	
 ];
 
 files.forEach((file) => {

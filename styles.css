@@ -72,6 +72,14 @@
 	position: relative;
 }
 
+.rx-xidlabel-inline-render::after {
+	content: var(--xidlabel-content);
+	/*font-weight: 900; */
+    /* top: -0.1px; */
+    padding-left: 0.2em;
+    position: relative;
+}
+
 .rx-xidlabel-inline-render {
 	display: inline-block; /* 让 span 表现得像块级元素 */
 	padding: 2px 5px; /* 内边距 */

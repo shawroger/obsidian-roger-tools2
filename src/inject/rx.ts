@@ -38,6 +38,7 @@ declare global {
 			genStyle: (style: Record<string, string | undefined>) => string;
 			_counter: Record<string, number>;
 			settings: Record<string, string>;
+			xidmap: Record<string, number>;
 		};
 		Vue: any;
 		ELEMENT: any;
@@ -45,10 +46,9 @@ declare global {
 	}
 }
 
-
 export function injectRX(RX: any, app: App) {
-	
 	RX.app = app;
+	RX.xidmap = {};
 	RX._counter = {};
 	RX.author = "Roger";
 	RX.laptop1 = assets;
