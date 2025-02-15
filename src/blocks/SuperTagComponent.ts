@@ -43,8 +43,8 @@ function lineHelper(line: string) {
 	return line;
 }
 
-export class MetaInfoComponent extends MarkdownRenderChild {
-	static language = "rx-meta";
+export class SuperTagComponent extends MarkdownRenderChild {
+	static language = "rx-supertag";
 	private readonly abortController = new AbortController();
 	private div: any;
 	constructor(
@@ -56,10 +56,7 @@ export class MetaInfoComponent extends MarkdownRenderChild {
 		//@ts-ignore
 		const dv = app.plugins.plugins.dataview.api;
 		const data: any = parseYaml(markdownSource);
-		let key = data["key"];
-		if (!key) {
-			key = data["tag"];
-		}
+		let key = data["tag"];
 		this.div = el.createDiv();
 		const arr = app.vault.getMarkdownFiles().map(async (file) => {
 			if(data.exclude && file.path.match(new RegExp(data.exclude))) {

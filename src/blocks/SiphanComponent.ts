@@ -1,4 +1,4 @@
-import { App, MarkdownRenderChild } from "obsidian";
+import { App, MarkdownRenderChild, MarkdownRenderer } from "obsidian";
 import { replaceall, replaceHTMLLinks } from "src/utils";
 
 export class SiphanComponent extends MarkdownRenderChild {
@@ -8,7 +8,7 @@ export class SiphanComponent extends MarkdownRenderChild {
 	constructor(
 		private readonly el: HTMLElement,
 		private readonly markdownSource: string,
-		private readonly plugin: App
+		private readonly app: App
 	) {
 		super(el);
 
@@ -51,6 +51,14 @@ export class SiphanComponent extends MarkdownRenderChild {
 		}
 
 		div.appendChild(textDiv);
+		// MarkdownRenderer.render(
+		// 				this.app,
+		// 				textDiv.innerHTML,
+		// 				div,
+		// 				"",
+		// 				//@ts-ignore
+		// 				null
+		// 			);
 		div.appendChild(button);
 	}
 

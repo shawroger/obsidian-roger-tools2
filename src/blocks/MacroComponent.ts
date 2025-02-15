@@ -1,7 +1,7 @@
 import { App, MarkdownPostProcessor, MarkdownRenderChild } from "obsidian";
 import { replaceall, replaceHTMLLinks } from "src/utils";
 import { getCounterStr } from "src/utils/macrostr";
-import { jsonHelper } from "./MetaInfoComponent";
+import { jsonHelper } from "./SuperTagComponent";
 
 
 function renderMacro(app: App, text: string, code?: HTMLElement) {
@@ -136,17 +136,17 @@ export function MacroPostProcessor(app: App): MarkdownPostProcessor {
 					renderMacro(app, text.slice(2, -2).trim(), code);
 				} else if (text.startsWith("?=")) {
 					renderSiphan(text.slice(2), code);
-				} else if (text.startsWith("(") && text.endsWith(")") && text.length === 8 && /^[A-Z0-9]+$/.test(text.slice(1, -1))) {
-					renderSuperTag(text.slice(1, -1), code);
+				} else if (text.startsWith("#") && text.length === 7 && /^[A-Z0-9]+$/.test(text.slice(1))) {
+					renderXIDLabel(text.slice(1), code);
 				}else if (text.length > 4 && text.startsWith("@") && text.includes(":") && text.includes("=") && text.includes("{") && text.includes("}") ) {
-					renderMetaInfo(text, code);
+					renderSuperTag(text, code);
 				}
 			}
 		});
 	};
 }
 
-function renderSuperTag(text: string, code?: HTMLElement) {
+function renderXIDLabel(text: string, code?: HTMLElement) {
 	const newEl: HTMLElement = document.createElement("span");
 	const link: HTMLLinkElement = document.createElement("a") as any;
 
@@ -156,7 +156,7 @@ function renderSuperTag(text: string, code?: HTMLElement) {
 	link.setAttribute("aria-label", "在 everything 中检索 " + text); 
 	
 	newEl.appendChild(link);
-	newEl.addClass("rx-supertag-inline-render");
+	newEl.addClass("rx-xidlabel-inline-render");
 	if (code) {
 		code.replaceWith(newEl);
 	}
@@ -167,7 +167,7 @@ function renderSuperTag(text: string, code?: HTMLElement) {
 
 
 
-function renderMetaInfo(text: string, code?: HTMLElement) {
+function renderSuperTag(text: string, code?: HTMLElement) {
 	const newEl: HTMLElement = document.createElement("span");
 	const titleEl: HTMLElement = document.createElement("span");
 	const contentEl: HTMLElement = document.createElement("span");
@@ -175,8 +175,8 @@ function renderMetaInfo(text: string, code?: HTMLElement) {
 	const prefix = text.split("=")[0].slice(1);
 	const jsonContent = (jsonHelper(text.split("=")[1]));
 	const json = JSON.parse(jsonContent);
-	titleEl.addClass("rx-meta-info-title");
-	contentEl.addClass("rx-meta-info-content");
+	titleEl.addClass("rx-supertag-title");
+	contentEl.addClass("rx-supertag-content");
 
 	for(const key of Object.keys(json)) {
 		const groupEl: HTMLElement = document.createElement("span");
@@ -186,13 +186,13 @@ function renderMetaInfo(text: string, code?: HTMLElement) {
 		valEl.innerText = json[key as any];
 		groupEl.appendChild(keyEl);
 		groupEl.appendChild(valEl);
-		groupEl.addClass("rx-meta-info-group");
+		groupEl.addClass("rx-supertag-group");
 		contentEl.appendChild(groupEl);
 	}
 	titleEl.innerText = prefix;
 	newEl.appendChild(titleEl);
 	newEl.appendChild(contentEl);
-	newEl.addClass("rx-meta-info-inline-render");
+	newEl.addClass("rx-supertag-inline-render");
 	if (code) {
 		code.replaceWith(newEl);
 	}

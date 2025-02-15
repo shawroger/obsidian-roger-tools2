@@ -20,7 +20,8 @@ export function injectSiphan() {
 		var _filp = {} as any;
 
 		for (var i = 0; i < Object.keys(arr).length; i++) {
-			_filp[Object.values(arr)[i] + ""] = (Object.keys(arr) as any)[i] * 1;
+			_filp[Object.values(arr)[i] + ""] =
+				(Object.keys(arr) as any)[i] * 1;
 		}
 
 		return _filp;
@@ -165,6 +166,7 @@ export function injectSiphan() {
 		encryptUTF8As: encryptUTF8As,
 	});
 
+	var USE_BASE64 = true;
 	var App: any = new (Siphan as any)();
 
 	App.__proto__["new"] = function () {
@@ -182,8 +184,22 @@ export function injectSiphan() {
 		return res;
 	}
 
+	function isBase64Text(text?: string) {
+		if (!text) return true;
+		return false === "!%@#:<*&-_>.?|;".split("").some((e) => text.includes(e));
+	}
+
+	function safeAtob(text?: string) {
+		if (!text) return "";
+		if (isBase64Text(text)) return atob(text);
+		return text;
+	}
+
 	function d(strings: string[] | string) {
 		let text = typeof strings === "string" ? strings : strings.join("");
+
+		text = safeAtob(text);
+
 		if (text.slice(0, 3).includes("h=")) {
 			return App.decryptUTF8(text);
 		}
@@ -198,18 +214,22 @@ export function injectSiphan() {
 		return res;
 	}
 
-	function e(strings: string[] | string) {
+	function e(strings: string[] | string, useBase64 = USE_BASE64) {
 		let text = typeof strings === "string" ? strings : strings.join("");
-		return App.encryptAs(
+		let cipher = App.encryptAs(
 			Base64.encode(randomPrefix().toString() + "+" + text),
 			SOLUTION
 		).cipher;
+
+		return USE_BASE64 ? btoa(cipher) : cipher;
 	}
 
 	function k(solution?: string) {
 		const x =
 			"T3018?#%=9Q$U!;@RZ^X+c:7S&BsDtJyfdExkrPAbvGINlghKLnjqHmpwCFOi6*/V,|.a >M_YWzoe-5u4<2";
+		solution = safeAtob(solution);
 		SOLUTION = solution ? App.decrypt(solution, x) : null;
+		// console.log(solution);
 	}
 
 	window.d = d;
