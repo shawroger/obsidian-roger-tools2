@@ -177,6 +177,7 @@ function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 	const linkEl: HTMLLinkElement = document.createElement("a") as any;
 
 	const links = processString("es://" + text.slice(1), [
+		"#xtt=",
 		"#xtg=",
 		"#xdd=",
 		"#x0=",
@@ -232,7 +233,7 @@ function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 		i = 0;
 		j = 0;
 	};
-	const xidlabelContent = ["📂", "✈️", "🤖"]
+	const xidlabelContent = ["📂", "🕊️", "✈️", "🤖"]
 		.filter((_, index) => links[index] && links[index].length > 0)
 		.join("+");
 
