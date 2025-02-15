@@ -217,8 +217,8 @@ function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 		for (; i < links.length; i++) {
 			if (
 				links[i] &&
-				links[i].length > 0 &&
-				window.$rx.xidmap[key] === 0
+				links[i].length > 0 
+				// && window.$rx.xidmap[key] === 0
 			) {
 				window.open(links[i], "_blank");
 				j++;
