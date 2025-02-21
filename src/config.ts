@@ -1,5 +1,7 @@
+import { safePath } from "./utils";
+
 export function assets(filename: string) {
-	return window.$rx?.settings["OBS_RESOURCE"] + filename;
+	return safePath(window.$rx?.settings["OBS_RESOURCE"]) + filename;
 }
 
 export const QQ_LOGOS: () => Record<string, string> = () => ({

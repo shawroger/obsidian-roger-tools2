@@ -175,7 +175,7 @@ function processString(s: string, list: string[]) {
 function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 	const newEl: HTMLElement = document.createElement("span");
 	const linkEl: HTMLLinkElement = document.createElement("a") as any;
-
+	const XID_OPEN_ACTION_ID = window.$rx?.settings["XID_OPEN_ACTION_ID"];
 	const links = processString("es://" + text.slice(1), [
 		"#xtt=",
 		"#xtg=",
@@ -185,59 +185,45 @@ function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 		"#x2=",
 		"#x3=",
 	]);
-	// let obsURL = "";
-	// const activeFile = this.app.workspace.getActiveFile();
-	// if (activeFile) {
-	// 	const filePath = activeFile.path;
-	// 	const fileRef = this.app.vault.getAbstractFileByPath(filePath);
-	// 	if (fileRef) {
-	// 		obsURL = this.app.vault.getResourcePath(fileRef);
-	// 		console.log("Obsidian URL:", obsURL);
-	// 	}
-	// }
 	const key = links[0].slice(5, 11);
 	linkEl.textContent = links[0].slice(5, 11);
-	if (links[0].endsWith("!")) links[0] = ""; // 取消 everything link
 
-	if (!window.$rx.xidmap[key]) window.$rx.xidmap[key] = 0;
-
-	
+	// 后缀 ! 取消运行 quicker xid_open
+	if (!links[0].endsWith("!") && XID_OPEN_ACTION_ID) {
+		links.push(
+			"quicker:runaction:" +
+				XID_OPEN_ACTION_ID +
+				"?write_to_vars=true&xid=" +
+				key
+		);
+	}
+	// 取消 everything link 除非加上后缀 .
+	if (!links[0].endsWith(".") && !links[0].endsWith(".!")) links[0] = "";
 
 	newEl.appendChild(linkEl);
 	newEl.addClass("rx-xidlabel-inline-render");
 	newEl.onclick = function (event) {
 		event.preventDefault();
 		console.log(
-			`#${key}(${window.$rx.xidmap[key]}) will open ${links
-				.filter((e) => e.length)
-				.join(" + ")}`
+			`#${key} will open ${links.filter((e) => e.length).join(" + ")}`
 		);
-		let i = 0,
-			j = 0;
-		for (; i < links.length; i++) {
-			if (
-				links[i] &&
-				links[i].length > 0 
-				// && window.$rx.xidmap[key] === 0
-			) {
-				window.open(links[i], "_blank");
-				j++;
-			}
-		}
 
-		if (i > 0 && j > 0) {
-			window.$rx.xidmap[key] ++;
-			// setTimeout(() => (window.$rx.xidmap[key] = 0), 2000);
-		}
-
-		i = 0;
-		j = 0;
+		links.forEach((link) => window.open(link, "_blank"));
 	};
-	const xidlabelContent = ["📂", "🕊️", "✈️", "🤖"]
-		.filter((_, index) => links[index] && links[index].length > 0)
-		.join("+");
+	let xidlabelContent = ["📂", "🕊️", "✈️", "🤖"].filter(
+		(_, index) => links[index] && links[index].length > 0
+	);
+	if (
+		XID_OPEN_ACTION_ID &&
+		links.some((e) => e.startsWith(XID_OPEN_ACTION_ID))
+	) {
+		xidlabelContent = ["👓", ...xidlabelContent];
+	}
 
-	newEl.style.setProperty("--xidlabel-content", `"${xidlabelContent}"`);
+	newEl.style.setProperty(
+		"--xidlabel-content",
+		`"${xidlabelContent.join("+")}"`
+	);
 	if (code) code.replaceWith(newEl);
 	return newEl;
 }
