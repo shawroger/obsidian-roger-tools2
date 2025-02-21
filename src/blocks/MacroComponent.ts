@@ -2,6 +2,7 @@ import { App, MarkdownPostProcessor, MarkdownRenderChild } from "obsidian";
 import { replaceall, replaceHTMLLinks } from "src/utils";
 import { getCounterStr } from "src/utils/macrostr";
 import { jsonHelper } from "./SuperTagComponent";
+import { Console } from "console";
 
 function renderMacro(app: App, text: string, code?: HTMLElement) {
 	const newEl: HTMLElement = document.createElement("span");
@@ -200,6 +201,7 @@ function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 	// 取消 everything link 除非加上后缀 .
 	if (!links[0].endsWith(".") && !links[0].endsWith(".!")) links[0] = "";
 
+	console.log(links);
 	newEl.appendChild(linkEl);
 	newEl.addClass("rx-xidlabel-inline-render");
 	newEl.onclick = function (event) {
@@ -213,11 +215,8 @@ function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 	let xidlabelContent = ["📂", "🕊️", "✈️", "🤖"].filter(
 		(_, index) => links[index] && links[index].length > 0
 	);
-	if (
-		XID_OPEN_ACTION_ID &&
-		links.some((e) => e.startsWith(XID_OPEN_ACTION_ID))
-	) {
-		xidlabelContent = ["👓", ...xidlabelContent];
+	if (links.some((e) => e.startsWith("quicker:"))) {
+		xidlabelContent = ["🕶️", ...xidlabelContent];
 	}
 
 	newEl.style.setProperty(
