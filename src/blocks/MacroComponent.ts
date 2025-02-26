@@ -201,7 +201,11 @@ function renderXIDLabel(app: App, text: string, code?: HTMLElement) {
 	// 取消 everything link 除非加上后缀 .
 	if (!links[0].endsWith(".") && !links[0].endsWith(".!")) links[0] = "";
 
-	console.log(links);
+	if (links[0].length > 0) {
+		if (links[0].endsWith(".!")) links[0] = links[0].slice(0, -2);
+		if (links[0].endsWith(".")) links[0] = links[0].slice(0, -1);
+	}
+
 	newEl.appendChild(linkEl);
 	newEl.addClass("rx-xidlabel-inline-render");
 	newEl.onclick = function (event) {
